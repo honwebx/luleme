@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=录了么
+GenericName=URL Index Checker
+Comment=网址收录批量查询、提交工具
+Exec=/usr/bin/luleme
+Icon=luleme
+Terminal=false
+Categories=Network;
+StartupWMClass=luleme

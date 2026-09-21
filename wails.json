@@ -1,0 +1,19 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "luleme",
+  "outputfilename": "luleme",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "luleme"
+  },
+  "info": {
+    "companyName": "luleme",
+    "productName": "录了么",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright © luleme",
+    "comments": "网址收录批量查询、提交工具"
+  }
+}
