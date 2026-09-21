@@ -11,9 +11,11 @@ permissions:
 
 env:
   WAILS_VERSION: v2.9.1
-  # Go >= 1.24: the Wails CLI binary built with Go <= 1.23 lacks LC_UUID and
-  # is killed by dyld (Abort trap 6) on macos-latest (macOS 26+).
-  GO_VERSION: '1.24'
+  # Go 1.26: >= 1.24 emits LC_UUID (required by dyld on macos-latest/macOS 26+,
+  # Go <= 1.23 binaries are killed with Abort trap 6), and 1.26 avoids the
+  # "internal error: package without types" importer failure seen with 1.24.x
+  # on darwin/arm64 + cgo (Wails build).
+  GO_VERSION: '1.26'
   NODE_VERSION: '20'
 
 jobs:
@@ -111,9 +113,17 @@ jobs:
         run: |
           if (!(Get-Command gcc -ErrorAction SilentlyContinue)) { choco install mingw -y }
           if (!(Get-Command makensis -ErrorAction SilentlyContinue)) { choco install nsis -y }
-          # choco does not refresh PATH for the current session; without this
+          # The NSIS choco package does not add its install dir to PATH, and choco
+          # does not refresh PATH for the running session either. Without this,
           # makensis is invisible and `wails build -nsis` silently skips the installer.
-          $env:Path = [System.Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path', 'User')
+          # Locate makensis.exe and persist its directory via GITHUB_PATH for later steps.
+          $makensis = Get-ChildItem 'C:\Program Files (x86)\NSIS', 'C:\Program Files\NSIS' -Filter makensis.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($null -eq $makensis) {
+            Write-Error "makensis.exe not found after choco install nsis"
+            exit 1
+          }
+          $makensis.DirectoryName | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+          $env:Path = "$($makensis.DirectoryName);$env:Path"
           Get-Command makensis -ErrorAction Stop
           makensis -version
 
@@ -137,7 +147,8 @@ jobs:
 
       - name: Build Windows installer
         run: |
-          $env:Path = [System.Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [System.Environment]::GetEnvironmentVariable('Path', 'User')
+          # NSIS dir was persisted via GITHUB_PATH in the install step; verify here.
+          Get-Command makensis -ErrorAction Stop
           wails build -nsis
           Get-ChildItem build/bin
 
