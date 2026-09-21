@@ -22,12 +22,12 @@
 
 ## 下载安装
 
-前往 GitHub Releases 页下载对应系统安装包（打 `v*` 标签自动构建三平台产物）：
+前往 GitHub Releases 页下载对应系统安装包：
 
 - Windows：`luleme-*-windows-amd64-installer.exe`
 - Ubuntu / Debian：`luleme-*_amd64.deb`
 - Linux：`luleme-*_linux-amd64`
-- macOS：`luleme-*-macos-arm64.zip`
+- macOS：`luleme-*-macos-arm64.dmg`
 
 ## 本地开发
 
