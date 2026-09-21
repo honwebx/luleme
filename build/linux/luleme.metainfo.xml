@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id type="desktop">luleme.desktop</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>MIT</project_license>
+  <name>录了么</name>
+  <summary>网址收录批量查询、提交工具</summary>
+  <description>
+    <p>录了么是一款基于 Wails 的跨平台桌面工具，支持批量查询网址在搜索引擎的收录情况，并通过 IndexNow 协议批量提交网址加速收录。</p>
+  </description>
+  <launchable type="desktop-id">luleme.desktop</launchable>
+  <url type="homepage">https://github.com/honwebx/luleme</url>
+  <provides>
+    <id>luleme.desktop</id>
+  </provides>
+  <content_rating type="oars-1.1" />
+</component>

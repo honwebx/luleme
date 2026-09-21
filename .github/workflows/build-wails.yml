@@ -70,10 +70,11 @@ jobs:
       - name: Package deb
         run: |
           PKGDIR="$PWD/.pkg/luleme_${VERSION}_amd64"
-          mkdir -p "$PKGDIR/DEBIAN" "$PKGDIR/usr/bin" "$PKGDIR/usr/share/applications" "$PKGDIR/usr/share/icons/hicolor/512x512/apps" dist
+          mkdir -p "$PKGDIR/DEBIAN" "$PKGDIR/usr/bin" "$PKGDIR/usr/share/applications" "$PKGDIR/usr/share/icons/hicolor/512x512/apps" "$PKGDIR/usr/share/metainfo" dist
           cp build/bin/luleme "$PKGDIR/usr/bin/luleme"
           chmod 755 "$PKGDIR/usr/bin/luleme"
           cp build/linux/luleme.desktop "$PKGDIR/usr/share/applications/luleme.desktop"
+          cp build/linux/luleme.metainfo.xml "$PKGDIR/usr/share/metainfo/luleme.metainfo.xml"
           cp build/appicon.png "$PKGDIR/usr/share/icons/hicolor/512x512/apps/luleme.png"
           cat > "$PKGDIR/DEBIAN/control" <<EOF
           Package: luleme
@@ -214,12 +215,12 @@ jobs:
       - name: Package macOS app
         run: |
           mkdir -p dist
-          ditto -c -k --sequesterRsrc --keepParent build/bin/luleme.app "dist/luleme_${VERSION}-macos-arm64.zip"
+          hdiutil create -volname "录了么" -fs HFS+ -srcfolder build/bin/luleme.app -ov -format UDZO "dist/luleme_${VERSION}-macos-arm64.dmg"
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: luleme-macos-zip
+          name: luleme-macos-dmg
           path: dist/
 
   release:
