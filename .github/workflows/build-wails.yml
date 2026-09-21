@@ -11,11 +11,14 @@ permissions:
 
 env:
   WAILS_VERSION: v2.9.1
-  # Go 1.26: >= 1.24 emits LC_UUID (required by dyld on macos-latest/macOS 26+,
-  # Go <= 1.23 binaries are killed with Abort trap 6), and 1.26 avoids the
-  # "internal error: package without types" importer failure seen with 1.24.x
-  # on darwin/arm64 + cgo (Wails build).
-  GO_VERSION: '1.26'
+  # Go 1.23: the only version that satisfies all three constraints:
+  #   1. < 1.25, so golang.org/x/tools v0.17.0 (locked by Wails v2.9.1) still
+  #      compiles (golang/go#74462: x/tools v0.8.0-v0.25.0 fails on Go 1.25+);
+  #   2. != 1.24, which has an importer "package without types" failure on
+  #      darwin/arm64 + cgo;
+  #   3. <= 1.23 binaries run on macos-15, which (unlike macos-latest/macOS 26+)
+  #      does not enforce the LC_UUID load command (Abort trap 6).
+  GO_VERSION: '1.23'
   NODE_VERSION: '20'
 
 jobs:
@@ -170,7 +173,9 @@ jobs:
           path: dist/
 
   build-macos:
-    runs-on: macos-latest
+    # macos-15 (Sequoia) does not enforce LC_UUID, so Go 1.23 binaries run.
+    # macos-latest (macOS 26+) kills Go <= 1.23 binaries (Abort trap 6).
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
