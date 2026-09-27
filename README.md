@@ -1,4 +1,4 @@
-# 录了么
+# 录了么：网址收录批量查询
 
 网址收录批量查询、提交工具。跨平台桌面应用（Linux / macOS / Windows），一站式完成「爬取站内 URL → 批量查 Bing 收录 → IndexNow 推送未收录页面」。
 
@@ -53,7 +53,3 @@ wails build
 - 前端：Vue 3 + TypeScript + Vite + Pinia + Vue Router
 - 查询引擎：Bing（可扩展）
 - 提交协议：IndexNow
-
-## 许可证
-
-MIT
